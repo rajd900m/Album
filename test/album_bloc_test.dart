@@ -32,5 +32,21 @@ void main() {
         AlbumIsLoaded(album),
       ]
     );
+
+    blocTest(
+        'emits [AlbumIsLoading, AlbumIsLoaded] when successful',
+        build: () {
+          when(mockAlbumRepository.getAlbumData()).thenThrow(Exception());
+          return AlbumBloc(mockAlbumRepository);
+        },
+        act: (bloc) => bloc.add(FetchAlbum()),
+        expect: [
+          AlbumIsLoading(),
+          AlbumIsNotLoaded(),
+        ]
+    );
+
   });
+
+
 }
