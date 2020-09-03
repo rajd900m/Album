@@ -17,22 +17,20 @@ void main() {
   });
 
   group('FetchAlbum', () {
+
     final album = Album(id: 1, userId: 1, title: "Test Title");
 
-    test('emits [AlbumIsLoading, AlbumIsLoaded] when successful', () {
-      when(mockAlbumRepository.getAlbumData()).thenAnswer((_) async => album);
-
-      final bloc = AlbumBloc(mockAlbumRepository);
-
-      bloc.add(FetchAlbum());
-
-      expectLater(
-          bloc,
-          emitsInOrder([
-            AlbumIsLoading(),
-            AlbumIsLoaded(album),
-          ]));
-    });
-
+    blocTest(
+      'emits [AlbumIsLoading, AlbumIsLoaded] when successful',
+      build: () {
+        when(mockAlbumRepository.getAlbumData()).thenAnswer((_) async => album);
+        return AlbumBloc(mockAlbumRepository);
+      },
+      act: (bloc) => bloc.add(FetchAlbum()),
+      expect: [
+        AlbumIsLoading(),
+        AlbumIsLoaded(album),
+      ]
+    );
   });
 }
